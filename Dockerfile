@@ -1,12 +1,15 @@
 FROM python:3.8-slim
 
-WORKDIR /usr/src/app
+WORKDIR /home/app
 
-COPY requirements.txt .
+# install system dependencies
+RUN apt-get update && apt-get install -y netcat
 
-RUN \
-    pip install -r requirements.txt
+# install project libraries
+COPY requirements.txt /home/app/
+RUN pip install -r requirements.txt
 
-COPY . .
+# copy project files
+COPY . /home/app/
 
-CMD ["python3", "app.py"]
+ENTRYPOINT ["/home/app/entrypoint.sh"]
